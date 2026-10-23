@@ -1,0 +1,7 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "team-dev-toolkit",
+  "version": "0.2.0",
+  "description": "Story-to-merge-request agents for .NET/React teams: GitLab story intake, repository assessment, technical spec generation, TDD test writing and spec-aware code review. Designed to minimise AI credit usage by handing off between phases through files.",
+  "keywords": ["gitlab", "dotnet", "react", "spec", "tdd", "code-review"]
+}

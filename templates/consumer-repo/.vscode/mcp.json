@@ -1,0 +1,33 @@
+{
+  // GitLab MCP server for this workspace. The server MUST be named "gitlab":
+  // the toolkit's agents reference it as 'gitlab/*'.
+  //
+  // Option A — GitLab's built-in MCP server (GitLab 18.7+, Premium/Ultimate,
+  // enabled by your GitLab admin). VS Code handles the OAuth sign-in.
+  "servers": {
+    "gitlab": {
+      "type": "http",
+      "url": "https://<your-gitlab-host>/api/v4/mcp"
+    }
+  }
+
+  // Option B — if the built-in server is not available on your instance,
+  // replace the block above with a vetted community or in-house GitLab MCP
+  // server that runs locally and uses a read-only personal access token, e.g.:
+  //
+  // "inputs": [
+  //   { "type": "promptString", "id": "gitlab-token",
+  //     "description": "GitLab personal access token (read_api scope)", "password": true }
+  // ],
+  // "servers": {
+  //   "gitlab": {
+  //     "type": "stdio",
+  //     "command": "<server command>",
+  //     "args": [],
+  //     "env": {
+  //       "GITLAB_URL": "https://<your-gitlab-host>",
+  //       "GITLAB_TOKEN": "${input:gitlab-token}"
+  //     }
+  //   }
+  // }
+}
