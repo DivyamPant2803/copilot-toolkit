@@ -1,0 +1,39 @@
+# Warns on a merge request when structural files change but docs/ai/app-overview.md does not.
+# Never blocks the pipeline (allow_failure: true) and uses no AI credits.
+#
+# How to use: copy this file into your repo (e.g. ci/overview-check.gitlab-ci.yml) and add to .gitlab-ci.yml:
+#   include:
+#     - local: ci/overview-check.gitlab-ci.yml
+# Adjust STRUCTURAL_PATTERNS to your repo layout.
+
+overview-check:
+  stage: test                      # use any stage that exists in your pipeline
+  # image: <your approved base image with git and a POSIX shell>
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  allow_failure: true
+  variables:
+    GIT_DEPTH: "0"                 # full history so the merge base can be found
+    OVERVIEW_FILE: "docs/ai/app-overview.md"
+    # Extended regex matched against changed file paths.
+    STRUCTURAL_PATTERNS: '(^|/)Program\.cs$|(^|/)Startup\.cs$|DbContext\.cs$|(^|/)Migrations/|Controllers?/|(^|/)Endpoints?/|\.csproj$|\.sln$|(^|/)package\.json$|(^|/)router?\.(tsx?|jsx?)$|(^|/)routes\.(tsx?|jsx?)$|^\.gitlab-ci\.yml$'
+  script:
+    - BASE="${CI_MERGE_REQUEST_DIFF_BASE_SHA:-origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME}"
+    - CHANGED="$(git diff --name-only "$BASE"...HEAD)"
+    - STRUCTURAL="$(printf '%s\n' "$CHANGED" | grep -E "$STRUCTURAL_PATTERNS" | grep -v '\.Designer\.cs$' || true)"
+    - |
+      if [ -z "$STRUCTURAL" ]; then
+        echo "No structural changes. Overview check passed."
+        exit 0
+      fi
+      if printf '%s\n' "$CHANGED" | grep -qx "$OVERVIEW_FILE"; then
+        echo "Structural changes found and $OVERVIEW_FILE was updated. Overview check passed."
+        exit 0
+      fi
+      echo "WARNING: this MR changes structural files but not $OVERVIEW_FILE:"
+      printf '%s\n' "$STRUCTURAL" | sed 's/^/  /'
+      echo ""
+      echo "Check the Code Reviewer's 'Overview impact' section, or run Repo Assessor:"
+      echo "  'Update from diff against $CI_MERGE_REQUEST_TARGET_BRANCH_NAME'"
+      echo "If the change doesn't affect the overview, ignore this warning."
+      exit 1

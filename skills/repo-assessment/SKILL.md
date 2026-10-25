@@ -60,6 +60,20 @@ Last assessed: <YYYY-MM-DD> at commit <short sha>
 <tech debt, missing tests, (unverified) items>
 ```
 
+## Update from diff
+1. Read the current overview first.
+2. `git diff --stat <target>...HEAD`, then read only the diffs of structural files: `Program.cs`/startup, DbContext and entity classes, `Migrations/`, controllers/endpoints, `*.csproj`, `package.json`, router configuration, CI files, and anything the overview cites.
+3. For each change, apply the "does it affect the overview" test: new or removed API area, entity, job or integration; changed business rule; new or abandoned convention; changed commands or frameworks; moved or renamed cited file. Ignore everything else.
+4. Edit only the affected lines or sections. Bump "Last assessed" to today and the branch's short commit.
+5. If nothing qualifies, change nothing and say "No overview impact".
+
+## Drift check
+1. Read the current overview.
+2. Verify cheaply, in this order: every cited file path still exists (`git ls-files`); the Repository map matches the top-level folders; the API areas match the controllers/endpoint groups; the entity list matches the DbContext; integrations match DI registrations; build/test commands match the project files and `package.json` scripts.
+3. Spot-check business rules and conventions only where their cited files changed since "Last assessed" (`git log --since=<date> --name-only`).
+4. Fix only what is wrong or missing; mark anything you can't settle from code as `(unverified)`.
+5. Bump "Last assessed".
+
 ## Quality bar
 - Every claim about behaviour points to a file.
 - Commands are exact and copy-pasteable.

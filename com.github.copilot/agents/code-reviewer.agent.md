@@ -30,5 +30,8 @@ Follow the `review-checklist` skill for what to check and the exact report forma
 - When a finding depends on code outside the diff, open that code before reporting it.
 - If unsure, label the finding "Question", not "Bug".
 
+## Overview impact
+After the findings, compare the diff with `docs/ai/app-overview.md` and report what the change makes out of date. Follow the "Overview impact" rules in the `review-checklist` skill. If the diff already updates the overview, check those edits are accurate instead. Never edit the overview yourself.
+
 ## Reply
 The report in the `review-checklist` format, nothing else.

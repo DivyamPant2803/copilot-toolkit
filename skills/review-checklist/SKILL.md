@@ -64,7 +64,24 @@ Target: <branch or !MR> · Files: <n changed> · Build: <pass/fail/not run> · T
 ## Out-of-scope changes
 - `path`: <what changed>. Suggest: <keep / split into separate MR / revert>
 
+## Overview impact
+<"No overview impact" — or, per section of docs/ai/app-overview.md:>
+- **<Section name>**: <what is now wrong or missing>
+  Proposed text: `<exact replacement or new line, with file citation>`
+
 ## Where to look first
 <the 3–5 files a human reviewer should read closely, in order, and why>
 ```
+
+## Overview impact rules
+The overview needs updating when the diff:
+- adds or removes an API area, project, entity/table, background job or external integration;
+- adds, changes or removes a business rule the overview lists (or should list);
+- introduces a new pattern other code should copy, or abandons an existing convention;
+- changes build, run or test commands, frameworks or key package versions;
+- moves or renames something the overview cites (a broken file reference counts).
+
+It does **not** need updating for ordinary bug fixes, new fields on existing entities, UI tweaks, or new code that follows existing patterns. Say "No overview impact" in that case; most stories land here.
+
+Proposed text must be written in the overview's existing style, concise, with a file citation, ready to paste. If the change is large (a new module), propose running Repo Assessor in "update from diff" mode instead of listing many lines.
 Keep the report under about 150 lines. Omit empty severity headings.
